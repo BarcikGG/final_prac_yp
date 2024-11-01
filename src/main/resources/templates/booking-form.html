@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base-layout :: head}">
+  <title>Book Apartment - Rental App</title>
+</head>
+<body>
+<div th:replace="~{base-layout :: nav}"></div>
+
+<div id="content" class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h2>Book Apartment</h2>
+          <h5 th:text="${apartment.title}">Apartment Title</h5>
+        </div>
+        <div class="card-body">
+          <form th:action="@{/booking/{id}(id=${apartment.id})}"
+                method="post"
+                th:object="${booking}">
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="checkInDate" class="form-label">Check-in Date</label>
+                <input type="date" class="form-control"
+                       id="checkInDate"
+                       th:field="*{checkInDate}"
+                       th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+                       required>
+                <div class="text-danger"
+                     th:if="${#fields.hasErrors('checkInDate')}"
+                     th:errors="*{checkInDate}">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="checkOutDate" class="form-label">Check-out Date</label>
+                <input type="date" class="form-control"
+                       id="checkOutDate"
+                       th:field="*{checkOutDate}"
+                       th:min="${#temporals.format(#temporals.createNow().plusDays(1), 'yyyy-MM-dd')}"
+                       required>
+                <div class="text-danger"
+                     th:if="${#fields.hasErrors('checkOutDate')}"
+                     th:errors="*{checkOutDate}">
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="notes" class="form-label">Special Requests</label>
+              <textarea class="form-control"
+                        id="notes"
+                        th:field="*{notes}"
+                        rows="3">
+                                </textarea>
+            </div>
+
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Price Details</h5>
+                <div class="d-flex justify-content-between">
+                  <span>Price per night:</span>
+                  <span>$<span th:text="${apartment.pricePerNight}">100</span></span>
+                  <input type="hidden" id="totalPrice1" th:field="*{totalPrice}" />
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                  <strong>Total Price:</strong>
+                  <strong>$<span id="totalPrice">0</span></strong>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Confirm Booking</button>
+            <a th:href="@{/apartment/{id}(id=${apartment.id})}"
+               class="btn btn-secondary">
+              Back to Apartment
+            </a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:replace="~{base-layout :: footer}"></div>
+
+<script th:inline="javascript">
+  const pricePerNight = /*[[${apartment.pricePerNight}]]*/ 0;
+
+  function calculateTotal() {
+    const checkIn = new Date(document.getElementById('checkInDate').value);
+    const checkOut = new Date(document.getElementById('checkOutDate').value);
+
+    if (checkIn && checkOut && checkIn < checkOut) {
+      const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+      const total = nights * pricePerNight;
+      document.getElementById('totalPrice').value = total.toFixed(2);
+      document.getElementById('totalPrice').textContent = total.toFixed(2);
+      document.getElementById('totalPrice1').value = total.toFixed(2);
+    } else {
+      document.getElementById('totalPrice').textContent = '0';
+      document.getElementById('totalPrice1').value = 0;
+      document.getElementById('totalPrice').value = 0;
+    }
+  }
+
+  // Add event listeners to date inputs
+  document.getElementById('checkInDate').addEventListener('change', calculateTotal);
+  document.getElementById('checkOutDate').addEventListener('change', calculateTotal);
+</script>
+</body>
+</html>

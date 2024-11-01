@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base-layout :: head}">
+  <title>Apartment Form - Admin</title>
+</head>
+<body>
+<div th:replace="~{base-layout :: nav}"></div>
+
+<div id="content" class="container">
+  <h2 class="mb-4" th:text="${apartment.id} ? 'Edit Apartment' : 'New Apartment'">Apartment Form</h2>
+
+  <form th:action="@{/admin/apartment/save}" method="post" th:object="${apartment}" class="row g-3">
+    <input type="hidden" th:field="*{id}">
+
+    <div class="col-md-6">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" id="title" th:field="*{title}" required>
+      <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+    </div>
+
+    <div class="col-md-6">
+      <label for="address" class="form-label">Address</label>
+      <input type="text" class="form-control" id="address" th:field="*{address}" required>
+      <div class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
+    </div>
+
+    <div class="col-md-4">
+      <label for="pricePerNight" class="form-label">Price per Night</label>
+      <input type="number" step="0.01" class="form-control" id="pricePerNight" th:field="*{pricePerNight}" required>
+      <div class="text-danger" th:if="${#fields.hasErrors('pricePerNight')}" th:errors="*{pricePerNight}"></div>
+    </div>
+
+    <div class="col-md-4">
+      <label for="bedrooms" class="form-label">Bedrooms</label>
+      <input type="number" class="form-control" id="bedrooms" th:field="*{bedrooms}" required>
+      <div class="text-danger" th:if="${#fields.hasErrors('bedrooms')}" th:errors="*{bedrooms}"></div>
+    </div>
+
+    <div class="col-md-4">
+      <label for="bathrooms" class="form-label">Bathrooms</label>
+      <input type="number" class="form-control" id="bathrooms" th:field="*{bathrooms}" required>
+      <div class="text-danger" th:if="${#fields.hasErrors('bathrooms')}" th:errors="*{bathrooms}"></div>
+    </div>
+
+    <div class="col-md-12">
+      <label for="description" class="form-label">Description</label>
+      <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
+    </div>
+
+    <div class="col-md-6">
+      <label for="area" class="form-label">Area (m²)</label>
+      <input type="number" step="0.01" class="form-control" id="area" th:field="*{area}" required>
+      <div class="text-danger" th:if="${#fields.hasErrors('area')}" th:errors="*{area}"></div>
+    </div>
+
+    <div class="col-md-12">
+      <label class="form-label">Amenities</label>
+      <div class="row g-3">
+        <div class="col-md-3" th:each="amenity : ${allAmenities}">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox"
+                   th:field="*{amenities}" th:value="${amenity.id}">
+            <label class="form-check-label" th:text="${amenity.name}">Amenity</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Save Apartment</button>
+      <a href="/admin/apartments" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+</body>
+</html>

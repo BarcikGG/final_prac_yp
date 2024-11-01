@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base-layout :: head}">
+    <title>My Bookings - Rental App</title>
+</head>
+<body>
+<div th:replace="~{base-layout :: nav}"></div>
+
+<div id="content" class="container">
+    <h2 class="mb-4">My Bookings</h2>
+
+    <div class="row">
+        <!-- Active Bookings -->
+        <div class="col-md-12 mb-4">
+            <h3>Active Bookings</h3>
+            <div class="row">
+                <div class="col-md-6 mb-4"
+                     th:each="booking : ${bookings}"
+                     th:if="${booking.status == T(com.example.final_prac.model.BookingStatus).CONFIRMED}">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${booking.apartment.title}">Apartment Title</h5>
+                            <div class="mb-2">
+                                <span class="badge bg-success" th:text="${booking.status}">Status</span>
+                            </div>
+                            <p class="card-text">
+                                <i class="fas fa-calendar"></i>
+                                Check-in: <span th:text="${#temporals.format(booking.checkInDate, 'dd-MM-yyyy')}">
+                                        Check-in date
+                                    </span>
+                            </p>
+                            <p class="card-text">
+                                <i class="fas fa-calendar-check"></i>
+                                Check-out: <span th:text="${#temporals.format(booking.checkOutDate, 'dd-MM-yyyy')}">
+                                        Check-out date
+                                    </span>
+                            </p>
+                            <p class="card-text">
+                                <i class="fas fa-money-bill"></i>
+                                Total: $<span th:text="${booking.totalPrice}">Price</span>
+                            </p>
+                            <a th:href="@{/apartment/{id}(id=${booking.apartment.id})}"
+                               class="btn btn-primary">
+                                View Apartment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Past Bookings -->
+        <div class="col-md-12">
+            <h3>Past Bookings</h3>
+            <div class="row">
+                <div class="col-md-6 mb-4"
+                     th:each="booking : ${bookings}"
+                     th:if="${booking.status == T(com.example.final_prac.model.BookingStatus).COMPLETED}">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${booking.apartment.title}">Apartment Title</h5>
+                            <div class="mb-2">
+                                <span class="badge bg-secondary" th:text="${booking.status}">Status</span>
+                            </div>
+                            <p class="card-text">
+                                <i class="fas fa-calendar"></i>
+                                Check-in: <span th:text="${#temporals.format(booking.checkInDate, 'dd-MM-yyyy')}">
+                                        Check-in date
+                                    </span>
+                            </p>
+                            <p class="card-text">
+                                <i class="fas fa-calendar-check"></i>
+                                Check-out: <span th:text="${#temporals.format(booking.checkOutDate, 'dd-MM-yyyy')}">
+                                        Check-out date
+                                    </span>
+                            </p>
+                            <p class="card-text">
+                                <i class="fas fa-money-bill"></i>
+                                Total: $<span th:text="${booking.totalPrice}">Price</span>
+                            </p>
+                            <a th:href="@{/apartment/{id}(id=${booking.apartment.id})}"
+                               class="btn btn-primary">
+                                View Apartment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Bookings Message -->
+    <div th:if="${#lists.isEmpty(bookings)}" class="alert alert-warning" role="alert">
+        You have no bookings.
+    </div>
+</div>
+
+<div th:replace="~{base-layout :: footer}"></div>
+</body>
+</html>

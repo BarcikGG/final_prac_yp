@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base-layout :: head}">
+  <title>Manager Dashboard - Rental App</title>
+</head>
+<body>
+<div th:replace="~{base-layout :: nav}"></div>
+
+<div id="content" class="container">
+  <h2 class="mb-4">Manager Dashboard</h2>
+
+  <!-- Statistics Cards -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <h5 class="card-title">Активные букинги</h5>
+          <p class="card-text h2" th:text="${confirmedCount}">0</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-warning text-dark">
+        <div class="card-body">
+          <h5 class="card-title">Ожидают подтверждения</h5>
+          <p class="card-text h2" th:text="${pendingCount}">0</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-success text-white">
+        <div class="card-body">
+          <h5 class="card-title">Завершенные</h5>
+          <p class="card-text h2" th:text="${completedCount}">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bookings Table -->
+  <div class="card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="card-title">Список бронирований</h3>
+        <div class="btn-group">
+          <a th:href="@{/manager/dashboard}"
+             th:class="${param.status == null ? 'btn btn-primary' : 'btn btn-outline-primary'}">
+            Все
+          </a>
+          <a th:href="@{/manager/dashboard(status=CONFIRMED)}"
+             th:class="${param.status == 'CONFIRMED' ? 'btn btn-primary' : 'btn btn-outline-primary'}">
+            Активные
+          </a>
+          <a th:href="@{/manager/dashboard(status=PENDING)}"
+             th:class="${param.status == 'PENDING' ? 'btn btn-primary' : 'btn btn-outline-primary'}">
+            Ожидают
+          </a>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Апартаменты</th>
+            <th>Клиент</th>
+            <th>Даты</th>
+            <th>Стоимость</th>
+            <th>Статус</th>
+            <th>Действия</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="booking : ${bookings}">
+            <td th:text="${booking.id}">1</td>
+            <td th:text="${booking.apartment.title}">Апартаменты</td>
+            <td th:text="${booking.user.username}">Пользователь</td>
+            <td>
+              <span th:text="${#temporals.format(booking.checkInDate, 'dd.MM')}">20.10</span> -
+              <span th:text="${#temporals.format(booking.checkOutDate, 'dd.MM')}">25.10</span>
+            </td>
+            <td th:text="${booking.totalPrice + ' $'}">1000 $</td>
+            <td>
+                                <span th:class="${
+                                    booking.status.name() == 'PENDING' ? 'badge bg-warning text-dark' :
+                                    booking.status.name() == 'CONFIRMED' ? 'badge bg-success' :
+                                    booking.status.name() == 'CANCELLED' ? 'badge bg-danger' :
+                                    'badge bg-info'
+                                }"
+                                      th:text="${booking.status}">Статус</span>
+            </td>
+            <td>
+              <form th:action="@{/manager/booking/{id}/status(id=${booking.id})}" method="POST" class="d-inline">
+                <select name="status" class="form-select form-select-sm w-auto"
+                        onchange="this.form.submit()">
+                  <option value="">Изменить статус</option>
+                  <option value="CONFIRMED"
+                          th:if="${booking.status.name() == 'PENDING'}">
+                    Подтвердить
+                  </option>
+                  <option value="CANCELLED"
+                          th:if="${booking.status.name() != 'CANCELLED'}">
+                    Отменить
+                  </option>
+                  <option value="COMPLETED"
+                          th:if="${booking.status.name() == 'CONFIRMED'}">
+                    Завершить
+                  </option>
+                </select>
+              </form>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

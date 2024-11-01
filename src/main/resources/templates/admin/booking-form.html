@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base-layout :: head}">
+  <title>Edit Booking - Admin</title>
+</head>
+<body>
+<div th:replace="~{base-layout :: nav}"></div>
+
+<div id="content" class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h2 class="mb-4">Edit Booking</h2>
+
+      <form th:action="@{/admin/booking/save}" th:object="${booking}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="mb-3">
+          <label class="form-label">User</label>
+          <select th:field="*{user}" class="form-select">
+            <option th:each="user : ${users}"
+                    th:value="${user.id}"
+                    th:text="${user.username}">
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Apartment</label>
+          <select th:field="*{apartment}" class="form-select">
+            <option th:each="apartment : ${apartments}"
+                    th:value="${apartment.id}"
+                    th:text="${apartment.title}">
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Check In Date</label>
+          <input type="date" th:field="*{checkInDate}" class="form-control" />
+          <div class="text-danger" th:if="${#fields.hasErrors('checkIn')}" th:errors="*{checkInDate}"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Check Out Date</label>
+          <input type="date" th:field="*{checkOutDate}" class="form-control" />
+          <div class="text-danger" th:if="${#fields.hasErrors('checkOut')}" th:errors="*{checkOutDate}"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Status</label>
+          <select th:field="*{status}" class="form-select">
+            <option th:each="status : ${statuses}"
+                    th:value="${status}"
+                    th:text="${status}">
+            </option>
+          </select>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <a th:href="@{/admin/bookings}" class="btn btn-secondary me-2">Cancel</a>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

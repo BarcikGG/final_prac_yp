@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base-layout :: head}">
+  <title>Manage Bookings - Admin</title>
+</head>
+<body>
+<div th:replace="~{base-layout :: nav}"></div>
+
+<div id="content" class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Manage Bookings</h2>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>User</th>
+        <th>Apartment</th>
+        <th>Check In</th>
+        <th>Check Out</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="booking : ${bookings}">
+        <td th:text="${booking.id}">1</td>
+        <td th:text="${booking.user.username}">john_doe</td>
+        <td th:text="${booking.apartment.title}">Luxury Apartment</td>
+        <td th:text="${#temporals.format(booking.checkInDate, 'dd-MM-yyyy')}">01-01-2024</td>
+        <td th:text="${#temporals.format(booking.checkOutDate, 'dd-MM-yyyy')}">05-01-2024</td>
+        <td>
+                    <span th:class="${'badge ' +
+                        (booking.status == T(com.example.final_prac.model.BookingStatus).CONFIRMED ? 'bg-success' :
+                        (booking.status == T(com.example.final_prac.model.BookingStatus).PENDING ? 'bg-warning' :
+                        (booking.status == T(com.example.final_prac.model.BookingStatus).CANCELLED ? 'bg-danger' : 'bg-secondary')))}"
+                          th:text="${booking.status}">
+                    </span>
+        </td>
+        <td>
+          <a th:href="@{/admin/booking/edit/{id}(id=${booking.id})}" class="btn btn-sm btn-warning">Edit</a>
+          <form th:action="@{/admin/booking/delete/{id}(id=${booking.id})}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

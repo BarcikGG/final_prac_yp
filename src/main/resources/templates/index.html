@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base-layout :: head}">
+  <title>Home - Rental App</title>
+</head>
+<body>
+<div th:replace="~{base-layout :: nav}"></div>
+
+<div id="content" class="container">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <form class="row g-3">
+            <div class="col-md-4">
+              <input type="text" class="form-control" name="search" placeholder="Search by title or address">
+            </div>
+            <div class="col-md-2">
+              <select class="form-select" name="bedrooms">
+                <option value="">Bedrooms</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3+</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <input type="number" class="form-control" name="maxPrice" placeholder="Max price">
+            </div>
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+  </div>
+</div>
+
+<div th:replace="~{base-layout :: footer}"></div>
+
+<script src="/js/apartments.js"></script>
+</body>
+</html>

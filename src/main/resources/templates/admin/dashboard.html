@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base-layout :: head}">
+  <title>Admin Dashboard - Rental App</title>
+</head>
+<body>
+<div th:replace="~{base-layout :: nav}"></div>
+
+<!-- Admin Dashboard -->
+<div id="content" class="container">
+  <h2 class="mb-4">Admin Dashboard</h2>
+
+  <!-- Statistics Cards -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <h5 class="card-title">Total Users</h5>
+          <p class="card-text h2" th:text="${totalUsers}">0</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-success text-white">
+        <div class="card-body">
+          <h5 class="card-title">Total Apartments</h5>
+          <p class="card-text h2" th:text="${totalApartments}">0</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-info text-white">
+        <div class="card-body">
+          <h5 class="card-title">Total Bookings</h5>
+          <p class="card-text h2" th:text="${totalBookings}">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Navigation -->
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex gap-2">
+            <a href="/admin/apartments" class="btn btn-primary">Manage Apartments</a>
+            <a href="/admin/users" class="btn btn-primary">Manage Users</a>
+            <a href="/admin/bookings" class="btn btn-primary">View Bookings</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
